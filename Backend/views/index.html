@@ -33,26 +33,14 @@
                     link.href = window.URL.createObjectURL(blob);
                     link.download = 'csv_data.csv';
                     link.click();
-                    console.log("blob",blob)
 
                     var reader = new FileReader();
                     reader.onload = function(event) {
                     var csvText = event.target.result;
-                    console.log("CSV Data:", csvText);
                     };
                     reader.readAsText(blob, 'UTF-8');
 
-                    if (csvText && csvText.length > 0) {
-                        var tableContainer = document.getElementById("tableContainer");
-                        var tableHTML = "<table border='1'><tr><th>SNo</th><th>Listing ID</th><th>Listing Title</th><th>Nightly Price</th><th>Listing URL</th></tr>";
-                        responseData.forEach(function(listing) {
-                            tableHTML += "<tr><td>" + listing.SNo + "</td><td>" + listing.id + "</td><td>" + listing.title + "</td><td>" + listing.nightlyPrice + "</td><td>" + listing.url + "</td></tr>";
-                        });
-                        tableHTML += "</table>";
-                        tableContainer.innerHTML = tableHTML;
-                    } else {
-                        tableContainer.innerHTML = "<p>No data found.</p>";
-                    }
+                
                 }
             };
             xhr.onerror = function() {
