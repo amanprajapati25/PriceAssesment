@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PriceLab Assesment</title>
+</head>
+<body>
+    <h1>API Request Form</h1>
+    <form id="apiForm" method="POST">
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address"><br><br>
+
+        <label for="pageSize">Page Size:</label>
+        <input type="number" id="pageSize" name="pageSize"><br><br>
+
+        <button type="button" style="background-color: lightblue;" onclick="submitForm()">Submit</button>
+    </form>
+
+    <div id="tableContainer"></div>
+
+    <script>
+        function submitForm() {
+            var formData = new FormData(document.getElementById("apiForm"));
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/api/sendPayload", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.responseType = 'blob';
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var blob = xhr.response;
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = 'csv_data.csv';
+                    link.click();
+                    console.log("blob",blob)
+
+                    var reader = new FileReader();
+                    reader.onload = function(event) {
+                    var csvText = event.target.result;
+                    console.log("CSV Data:", csvText);
+                    };
+                    reader.readAsText(blob, 'UTF-8');
+
+                    if (csvText && csvText.length > 0) {
+                        var tableContainer = document.getElementById("tableContainer");
+                        var tableHTML = "<table border='1'><tr><th>SNo</th><th>Listing ID</th><th>Listing Title</th><th>Nightly Price</th><th>Listing URL</th></tr>";
+                        responseData.forEach(function(listing) {
+                            tableHTML += "<tr><td>" + listing.SNo + "</td><td>" + listing.id + "</td><td>" + listing.title + "</td><td>" + listing.nightlyPrice + "</td><td>" + listing.url + "</td></tr>";
+                        });
+                        tableHTML += "</table>";
+                        tableContainer.innerHTML = tableHTML;
+                    } else {
+                        tableContainer.innerHTML = "<p>No data found.</p>";
+                    }
+                }
+            };
+            xhr.onerror = function() {
+            console.error('XHR Error:', xhr.statusText);
+        };
+            xhr.send(JSON.stringify(Object.fromEntries(formData)));
+        }
+        
+    </script>
+</body>
+</html>
