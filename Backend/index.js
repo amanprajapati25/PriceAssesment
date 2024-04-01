@@ -60,3 +60,11 @@ app.post('/api/sendPayload', (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
+   // axios.get(('https://api.publicapis.org/entries')
+    //     .then(res => {
+    //         console.log(res)
+    //     })
+    //     .catch(err => {
+    //         console.log('err',err)
+    //     })
+    // )
