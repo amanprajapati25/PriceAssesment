@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const fs = require("fs");
 const { createObjectCsvStringifier } = require("csv-writer");
 const vrboGraphQlApiResp = require("./dumApiResp");
+const { axios } = require("axios");
 
 const app = express();
 const port = 3000;
@@ -52,8 +53,7 @@ app.post('/api/sendPayload', (req, res) => {
     const csvString = csvStringifier.getHeaderString() + csvStringifier.stringifyRecords(filterExtractedData);
     res.setHeader("Content-Type", "text/csv");
     res.setHeader("Content-Disposition", 'attachment; filename="csv_data.csv"');
-    // res.send(csvString);
-        res.status(200).send({flag: true, msg: 'CSV data has been exported successfully.', data:csvString});
+    res.send(csvString);
 
 });
 
