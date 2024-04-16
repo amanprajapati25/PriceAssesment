@@ -1,30 +1,13 @@
 const express = require('express');
 const app = express();
-
+const dotenv = require('dotenv').config();
 const PORT = process.env.PORT || 8080;
 
+app.use(express.json());
+
 app.listen(PORT, () => {
-    console.log("server is running");
+    console.log(`server is running on ${PORT}`);
 })
 
-const items = [
-    {
-        name: 'Cloth',
-        id: '1',
-        price: '20'
-    },
-    {
-        name: 'Food',
-        id: '2',
-        price: '50'
-    },
-    {
-        name: 'House',
-        id: '3',
-        price: '150'
-    }
-]
+app.use('/api', require("./router/getapiroutes.js"));
 
-app.get('/api/items', (req,res) => {
-    res.send(items)
-});
