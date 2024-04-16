@@ -1,13 +1,40 @@
-import { Button, Input } from "antd";
 import React, { useEffect, useState } from "react";
+import { Button, Input } from "antd";
+import { apiRequest} from './apis';
+import TableContent from './TableContent'
 import "./App.css";
+
 const App = () => {
   const initData = {
     address: null,
     pageSize: 10,
   };
+
   const [items, setItems] = useState();
-  const [data, setData] = useState(initData);
+  const [formData, setFormData] = useState(initData);
+
+  const handleSubmit = () => {
+    apiRequest(formData)
+    .then(res => {
+      console.log("front",res.data.data.products)
+      setItems(res.data.data.products)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
+
+  const downloadCSV = () => {
+    const csvContent = "data:text/csv;charset=utf-8," + items.map(item => Object.values(item).join(",")).join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "items.csv");
+    document.body.appendChild(link);
+    link.click();
+  };
+
+
   return (
     <div>
     <div className="input-form">
@@ -15,8 +42,8 @@ const App = () => {
         <p>Address</p>
         <Input
           placeholder="Address"
-          value={data.address}
-          onChange={(e) => setData({ ...data, address: e.target.value })}
+          value={formData.address}
+          onChange={(e) => setFormData({ ...formData, address: e.target.value })}
         />
       </div>
 
@@ -24,19 +51,24 @@ const App = () => {
         <p>Page Size</p>
         <Input
           placeholder="Page Size"
-          value={data.pageSize}
-          onChange={(e) => setData({ ...data, pageSize: e.target.value })}
+          value={formData.pageSize}
+          onChange={(e) => setFormData({ ...formData, pageSize: e.target.value })}
         />
       </div>
-      <div className="submit-button">
-        <Button type="primary">
+      <div className="button-class">
+        <Button onClick={handleSubmit} type="primary">
             Submit
         </Button>
       </div>
+      <div className="button-class">
+          <Button onClick={downloadCSV} type="primary">
+            Download CSV
+          </Button>
+        </div>
     </div>
-    <div className="table">
-      
-    </div>
+      <div style={{marginTop: '40px'}}>
+        <TableContent />
+      </div>
     </div>
   );
 };

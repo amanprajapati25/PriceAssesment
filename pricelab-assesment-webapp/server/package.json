@@ -1,6 +1,7 @@
 {
   "name": "pricelab-assesment",
   "dependencies": {
+    "cors": "^2.8.5",
     "csv-writer": "^1.6.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2"

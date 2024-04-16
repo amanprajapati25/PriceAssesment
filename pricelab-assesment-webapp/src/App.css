@@ -3,7 +3,7 @@
     .address {
         margin-right: 10px;
     }
-    .submit-button{
+    .button-class{
         display: flex;
         align-self: end;
         margin-left: 10px;

@@ -1,33 +1,19 @@
 const axios = require("axios");
-const { createObjectCsvStringifier } = require("csv-writer");
 const getData = (req, res) => {
     res.status(200).json({ message: "All Data is here" });
 };
 
 const addData = async (req, res) => {
-    const { name, id } = req.body;
+
+    const address = req.query.address;
+    const pageSize = req.query.pageSize;
+    console.log("typpppp",address, pageSize)
 
     axios
-        .get("https://dummy.restapiexample.com/api/v1/employee/1")
+        .get("https://dummyjson.com/products")
         .then((response) => {
-            const data = response.data.data;
-
-            const csvStringifier = createObjectCsvStringifier({
-                header: [
-                    { id: 'id', title: 'Sno' },
-                    { id: 'employee_name', title: 'Name' },
-                    { id: 'employee_salary', title: 'Salary' },
-                    { id: 'employee_age', title: 'Age' }
-                ]
-            });
-
-            const csvData = csvStringifier.getHeaderString() + csvStringifier.stringifyRecords([data]);
-
-            res.setHeader("Content-Type", "text/csv");
-            res.setHeader("Content-Disposition", 'attachment; filename="csv_data.csv"');
-
-            res.status(200).send(csvData)
-            // res.status(200).json({ data: data, csvData: csvData });
+            const data = response.data;
+            res.status(200).json({ data: data, flag: true});
         })
         .catch((error) => {
             console.error("Error:", error);
@@ -35,10 +21,9 @@ const addData = async (req, res) => {
         });
 };
 
-module.exports = { addData };
-
-
 module.exports = { getData, addData };
+
+
 
 // const express = require("express");
 // const bodyParser = require('body-parser');
