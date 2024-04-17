@@ -1,43 +1,45 @@
 import React from 'react'
 import { Table } from "antd";
 import './App.css'
-const tableContent = () => {
-  const dataSource = [
-    {
-      key: '1',
-      name: 'Mike',
-      age: 32,
-      address: '10 Downing Street',
-    },
-    {
-      key: '2',
-      name: 'John',
-      age: 42,
-      address: '10 Downing Street',
-    },
-  ];
+const tableContent = ({items}) => {
+  console.log("here",items)
   
+  const dataSource = () => {
+    return (items || []).map((item, idx) => ({
+      key:idx,
+      listingID: item.id,
+      SNo: item.id,
+      listingTitle: item.brand,
+      url: "http.abc.com",
+    }));
+  };
+
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'SNo',
+      dataIndex: 'SNo',
+      key: 'sno',
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
+      title: 'Listing ID',
+      dataIndex: 'listingID',
+      key: 'listingID',
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
+      title: 'Listing Title',
+      dataIndex: 'listingTitle',
+      key: 'listingTitle',
+    },
+    {
+      title: 'Url',
+      dataIndex: 'url',
+      key: 'url',
     },
   ];
 
   return (
     <div className="data-table">
-      <Table dataSource={dataSource} columns={columns} />;
+      <Table dataSource={dataSource()} columns={columns} />
     </div>
   )
 }

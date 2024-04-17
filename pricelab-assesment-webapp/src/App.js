@@ -10,10 +10,11 @@ const App = () => {
     pageSize: 10,
   };
 
-  const [items, setItems] = useState();
+  const [items, setItems] = useState([]);
   const [formData, setFormData] = useState(initData);
-
+  const [showTable, setShowTable] = useState(false);
   const handleSubmit = () => {
+    setShowTable(true)
     apiRequest(formData)
     .then(res => {
       console.log("front",res.data.data.products)
@@ -24,14 +25,30 @@ const App = () => {
     })
   }
 
+  const formattedCSV = (items) => {
+    const headers = ['SNo', 'Listing ID', 'Listing Title', 'Url'];
+    const headerRow = headers.join(',');
+    const itemRows = items.map(item => Object.values(item).join(','));
+    const content = `${headerRow}\n${itemRows.join('\n')}`;
+    console.log(content)
+    return content;
+}
+
+
   const downloadCSV = () => {
-    const csvContent = "data:text/csv;charset=utf-8," + items.map(item => Object.values(item).join(",")).join("\n");
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "items.csv");
-    document.body.appendChild(link);
-    link.click();
+    if ((items.length) == 0){
+      return alert('Nothing to Download')
+    }
+
+    else{
+      const csvContent = "data:text/xls;charset=utf-8," + formattedCSV(items);
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "items.xls");
+      document.body.appendChild(link);
+      link.click();
+    }
   };
 
 
@@ -66,9 +83,9 @@ const App = () => {
           </Button>
         </div>
     </div>
-      <div style={{marginTop: '40px'}}>
-        <TableContent />
-      </div>
+      {showTable && !!(items.length) && <div style={{marginTop: '40px'}}>
+        <TableContent items={items}/>
+      </div>}
     </div>
   );
 };
